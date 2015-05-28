@@ -1,12 +1,12 @@
 package com.marcuello.clouddental;
 
-public class HelloGreeting {
+public class PrintPatient {
 
   public String message;
 
-  public HelloGreeting() {};
+  public PrintPatient() {}
 
-  public HelloGreeting(String message) {
+  public PrintPatient(String message) {
     this.message = message;
   }
 

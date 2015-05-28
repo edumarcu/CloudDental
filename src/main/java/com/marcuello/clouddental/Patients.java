@@ -1,4 +1,5 @@
 package com.marcuello.clouddental;
+
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.response.NotFoundException;
@@ -20,23 +21,23 @@ import javax.inject.Named;
 )
 public class Patients {
 
-    public static ArrayList<HelloGreeting> patients = new ArrayList<HelloGreeting>();
+    public static ArrayList<PrintPatient> patients = new ArrayList<>();
 
     static {
-        patients.add(new HelloGreeting("Edu"));
-        patients.add(new HelloGreeting("Tino"));
-        patients.add(new HelloGreeting("Alber"));
+        patients.add(new PrintPatient("Edu"));
+        patients.add(new PrintPatient("Tino"));
+        patients.add(new PrintPatient("Alber"));
     }
 
-    public HelloGreeting getGreeting(@Named("id") Integer id) throws NotFoundException {
+    public PrintPatient getPatient(@Named("id") Integer id) throws NotFoundException {
         try {
             return patients.get(id);
         } catch (IndexOutOfBoundsException e) {
-            throw new NotFoundException("Greeting not found with an index: " + id);
+            throw new NotFoundException("Patient not found with an index: " + id);
         }
     }
 
-    public ArrayList<HelloGreeting> listGreeting() {
+    public ArrayList<PrintPatient> listPatients() {
         return patients;
     }
 }

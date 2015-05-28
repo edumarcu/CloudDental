@@ -25,22 +25,22 @@
 </div>
 <div class="container">
 
-    <div id="outputLog"></div>
-
     <form action="javascript:void(0);">
         <h2>Get Patient</h2>
         <div><span class="label">Patient ID: </span><input id="id" /></div>
-        <div><input id="getGreeting" type="submit" class="btn btn-small" value="Submit"></div>
+        <div><input id="getPatient" type="submit" class="btn btn-small" value="Submit"></div>
     </form>
     
     <form action="javascript:void(0);">
         <h2>List Patients</h2>
-        <div><input id="listGreeting" type="submit" class="btn btn-small" value="Submit"></div>
+        <div><input id="listPatients" type="submit" class="btn btn-small" value="Submit"></div>
     </form>
+
+    <div id="outputLog"></div>
 
     <script type="text/javascript">
         function init() {
-            google.devrel.samples.hello.init('//' + window.location.host + '/_ah/api');
+            clouddental.init('//' + window.location.host + '/_ah/api');
         }
     </script>
     <script src="https://apis.google.com/js/client.js?onload=init"></script>

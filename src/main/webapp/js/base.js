@@ -6,44 +6,35 @@
  * @author edumarcu
  */
 
-/** google global namespace for Google projects. */
-var google = google || {};
-
-/** devrel namespace for Google Developer Relations projects. */
-google.devrel = google.devrel || {};
-
-/** samples namespace for DevRel sample code. */
-google.devrel.samples = google.devrel.samples || {};
-
-/** hello namespace for this sample. */
-google.devrel.samples.hello = google.devrel.samples.hello || {};
+/** global namespace for projects. */
+var clouddental = clouddental || {};
 
 /**
  * Client ID of the application (from the APIs Console).
  * @type {string}
  */
-google.devrel.samples.hello.CLIENT_ID = "10565776446-ldbmp8qsn44252158niubhla6b9984i1.apps.googleusercontent.com";
+clouddental.CLIENT_ID = "10565776446-ldbmp8qsn44252158niubhla6b9984i1.apps.googleusercontent.com";
 
 /**
  * Scopes used by the application.
  * @type {string}
  */
-google.devrel.samples.hello.SCOPES = "https://www.googleapis.com/auth/userinfo.email";
+clouddental.SCOPES = "https://www.googleapis.com/auth/userinfo.email";
 
 /**
  * Whether or not the user is signed in.
  * @type {boolean}
  */
-google.devrel.samples.hello.signedIn = false;
+clouddental.signedIn = false;
 
 /**
  * Loads the application UI after the user has completed auth.
  */
-google.devrel.samples.hello.userAuthed = function() {
+clouddental.userAuthed = function() {
     var request = gapi.client.oauth2.userinfo.get().execute(function(resp) {
         if (!resp.code) {
-            google.devrel.samples.hello.signedIn = true;
-            document.getElementById('signinButton').innerHTML = 'Sign out';
+            clouddental.signedIn = true;
+            document.getElementById("signinButton").innerHTML = "Sign out";
         }
     });
 };
@@ -53,22 +44,22 @@ google.devrel.samples.hello.userAuthed = function() {
  * @param {boolean} mode Whether or not to use immediate mode.
  * @param {Function} callback Callback to call on completion.
  */
-google.devrel.samples.hello.signin = function(mode, callback) {
-    gapi.auth.authorize({client_id: google.devrel.samples.hello.CLIENT_ID,
-        scope: google.devrel.samples.hello.SCOPES, immediate: mode},
+clouddental.signin = function(mode, callback) {
+    gapi.auth.authorize({client_id: clouddental.CLIENT_ID,
+        scope: clouddental.SCOPES, immediate: mode},
         callback);
 };
 
 /**
  * Presents the user with the authorization popup.
  */
-google.devrel.samples.hello.auth = function() {
-    if (!google.devrel.samples.hello.signedIn) {
-        google.devrel.samples.hello.signin(false,
-            google.devrel.samples.hello.userAuthed);
+clouddental.auth = function() {
+    if (!clouddental.signedIn) {
+        clouddental.signin(false,
+            clouddental.userAuthed);
     } else {
-        google.devrel.samples.hello.signedIn = false;
-        document.getElementById('signinButton').innerHTML = 'Sign in';
+        clouddental.signedIn = false;
+        document.getElementById("signinButton").innerHTML = "Sign in";
     }
 };
 
@@ -76,22 +67,22 @@ google.devrel.samples.hello.auth = function() {
  * Prints a greeting to the patient log.
  * param {Object} patient Patient to print.
  */
-google.devrel.samples.hello.print = function(greeting) {
-    var element = document.createElement('div');
-    element.classList.add('row');
-    element.innerHTML = greeting.message;
-    document.getElementById('outputLog').appendChild(element);
+clouddental.print = function(patient) {
+    var element = document.createElement("div");
+    element.classList.add("row");
+    element.innerHTML = patient.message;
+    document.getElementById("outputLog").appendChild(element);
 };
 
 /**
  * Gets a numbered patient via the API.
  * @param {string} id ID of the patient.
  */
-google.devrel.samples.hello.getGreeting = function(id) {
-    gapi.client.patientsCRUD.patients.getGreeting({'id': id}).execute(
+clouddental.getPatient = function(id) {
+    gapi.client.patientsCRUD.patients.getPatient({'id': id}).execute(
         function(resp) {
             if (!resp.code) {
-                google.devrel.samples.hello.print(resp);
+                clouddental.print(resp);
             } else {
                 window.alert(resp.message);
             }
@@ -102,13 +93,13 @@ google.devrel.samples.hello.getGreeting = function(id) {
 /**
  * Lists patients via the API.
  */
-google.devrel.samples.hello.listGreeting = function() {
-    gapi.client.patientsCRUD.patients.listGreeting().execute(
+clouddental.listPatients = function() {
+    gapi.client.patientsCRUD.patients.listPatients().execute(
         function(resp) {
             if (!resp.code) {
                 resp.items = resp.items || [];
                 for (var i = 0; i < resp.items.length; i++) {
-                    google.devrel.samples.hello.print(resp.items[i]);
+                    clouddental.print(resp.items[i]);
                 }
            }
         }
@@ -118,18 +109,18 @@ google.devrel.samples.hello.listGreeting = function() {
 /**
  * Enables the button callbacks in the UI.
  */
-google.devrel.samples.hello.enableButtons = function() {
-    document.getElementById('getGreeting').onclick = function() {
-        google.devrel.samples.hello.getGreeting(
-            document.getElementById('id').value);
+clouddental.enableButtons = function() {
+    document.getElementById("getPatient").onclick = function() {
+        clouddental.getPatient(
+            document.getElementById("id").value);
     }
 
-    document.getElementById('listGreeting').onclick = function() {
-        google.devrel.samples.hello.listGreeting();
+    document.getElementById("listPatients").onclick = function() {
+        clouddental.listPatients();
     }
   
-    document.getElementById('signinButton').onclick = function() {
-        google.devrel.samples.hello.auth();
+    document.getElementById("signinButton").onclick = function() {
+        clouddental.auth();
     }
 };
 
@@ -137,19 +128,19 @@ google.devrel.samples.hello.enableButtons = function() {
  * Initializes the application.
  * @param {string} apiRoot Root of the API's path.
  */
-google.devrel.samples.hello.init = function(apiRoot) {
-    // Loads the OAuth and helloworld APIs asynchronously, and triggers login
+clouddental.init = function(apiRoot) {
+    // Loads the OAuth and patientsCRUD APIs asynchronously, and triggers login
     // when they have completed.
     var apisToLoad;
     var callback = function() {
         if (--apisToLoad == 0) {
-            google.devrel.samples.hello.enableButtons();
-            google.devrel.samples.hello.signin(true,
-                google.devrel.samples.hello.userAuthed);
+            clouddental.enableButtons();
+            clouddental.signin(true,
+                clouddental.userAuthed);
         }
     }
 
     apisToLoad = 2; // must match number of calls to gapi.client.load()
-    gapi.client.load('patientsCRUD', 'v1', callback, apiRoot);
-    gapi.client.load('oauth2', 'v2', callback);
+    gapi.client.load("patientsCRUD", "v1", callback, apiRoot);
+    gapi.client.load("oauth2", "v2", callback);
 };
