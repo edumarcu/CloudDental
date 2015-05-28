@@ -1,4 +1,4 @@
-package com.marcuello.clouddental;
+package com.clouddental;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
