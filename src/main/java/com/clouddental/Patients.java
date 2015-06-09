@@ -5,9 +5,8 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.appengine.api.users.User;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Date;
 
 import javax.inject.Named;
 
@@ -31,35 +30,16 @@ import com.googlecode.objectify.ObjectifyService;
 @Entity
 public class Patients {
     @Id public Long id;
- //   public static ArrayList<Patient> patients = new ArrayList<>();
-/*    public static ArrayList<PrintPatient> patients = new ArrayList<>();
-
-    static {
-        patients.add(new PrintPatient("Edu"));
-        patients.add(new PrintPatient("Tino"));
-        patients.add(new PrintPatient("Alber"));
-    }*/
 
     public Patient createPatient(@Named("name") String name) {
-        Patient p = new Patient(name);
 
-        ObjectifyService.ofy().save().entity(p).now();
+        ObjectifyService.ofy().save().entity(new Patient(name)).now();
         //patients.add(p);
-        return p;
+        return getPatient(name);
     }
 
-/*    public Patient getPatient(@Named("id") Integer id) throws NotFoundException {
-        try {
-            return patients.get(id);
-        } catch (IndexOutOfBoundsException e) {
-            throw new NotFoundException("Patients not found with an index: " + id);
-        }
-    }*/
-
     public Patient getPatient(@Named("name") String name) {
-       // return ObjectifyService.ofy().load().type(Patient.class).id(5066549580791808L).now();
         return ObjectifyService.ofy().load().type(Patient.class).filter("name", name).first().now();
-
     }
 
     public List<Patient> listPatients() {
@@ -70,5 +50,13 @@ public class Patients {
                // .order("-creationDate")
                // .limit(5)
                 .list();
+    }
+
+    public Patient updatePatient(@Named("name") String name) {
+        Patient p = getPatient(name);
+        p.setUpdateDate(new Date());
+
+        ObjectifyService.ofy().save().entity(p).now();
+        return getPatient(name);
     }
 }

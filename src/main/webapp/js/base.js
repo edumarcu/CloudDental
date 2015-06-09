@@ -70,7 +70,7 @@ clouddental.auth = function() {
 clouddental.print = function(functionType, patient) {
     var element = document.createElement("div");
     element.classList.add("row");
-    element.innerHTML = functionType + " " + patient.name + " " + patient.creationDate + " " + patient.id;
+    element.innerHTML = functionType + " " + patient.name + " " + patient.creationDate + " " + patient.id + " " + patient.updateDate;
     document.getElementById("outputLog").appendChild(element);
 };
 
@@ -91,8 +91,8 @@ clouddental.createPatient = function(name) {
 };
 
 /**
- * Gets a numbered patient via the API.
- * @param {string} id ID of the patient.
+ * Gets a patient via the API.
+ * @param {string} name of the patient.
  */
 clouddental.getPatient = function(name) {
     gapi.client.patientsCRUD.patients.getPatient({"name": name}).execute(
@@ -105,6 +105,23 @@ clouddental.getPatient = function(name) {
         }
     );
 };
+
+/**
+ * Updates a patient via the API.
+ * @param {string} name of the patient.
+ */
+clouddental.updatePatient = function(name) {
+    gapi.client.patientsCRUD.patients.updatePatient({"name": name}).execute(
+        function(resp) {
+            if (!resp.code) {
+                clouddental.print("update", resp);
+            } else {
+                window.alert(resp.message);
+            }
+        }
+    );
+};
+
 
 /**
  * Lists patients via the API.
@@ -135,6 +152,11 @@ clouddental.enableButtons = function() {
     document.getElementById("getPatient").onclick = function() {
         clouddental.getPatient(
             document.getElementById("nameGet").value);
+    }
+
+    document.getElementById("updatePatient").onclick = function() {
+        clouddental.updatePatient(
+            document.getElementById("nameUpdate").value);
     }
 
     document.getElementById("listPatients").onclick = function() {
