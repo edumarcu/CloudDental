@@ -9,6 +9,12 @@ import java.util.ArrayList;
 
 import javax.inject.Named;
 
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Parent;
+import com.googlecode.objectify.Key;
+
 /**
  * Defines v1 of a patientsCRUD API.
  */
@@ -19,25 +25,31 @@ import javax.inject.Named;
     clientIds = {Constants.WEB_CLIENT_ID, Constants.ANDROID_CLIENT_ID, Constants.IOS_CLIENT_ID, Constants.API_EXPLORER_CLIENT_ID},
     audiences = {Constants.ANDROID_AUDIENCE}
 )
+@Entity
 public class Patients {
-
-    public static ArrayList<PrintPatient> patients = new ArrayList<>();
+    @Id public Long id;
+    public static ArrayList<Patient> patients = new ArrayList<>();
+/*    public static ArrayList<PrintPatient> patients = new ArrayList<>();
 
     static {
         patients.add(new PrintPatient("Edu"));
         patients.add(new PrintPatient("Tino"));
         patients.add(new PrintPatient("Alber"));
+    }*/
+
+    public void createPatient(@Named("name") String name) {
+        patients.add(new Patient(name));
     }
 
-    public PrintPatient getPatient(@Named("id") Integer id) throws NotFoundException {
+    public Patient getPatient(@Named("id") Integer id) throws NotFoundException {
         try {
             return patients.get(id);
         } catch (IndexOutOfBoundsException e) {
-            throw new NotFoundException("Patient not found with an index: " + id);
+            throw new NotFoundException("Patients not found with an index: " + id);
         }
     }
 
-    public ArrayList<PrintPatient> listPatients() {
+    public ArrayList<Patient> listPatients() {
         return patients;
     }
 }

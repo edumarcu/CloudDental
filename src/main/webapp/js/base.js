@@ -70,8 +70,24 @@ clouddental.auth = function() {
 clouddental.print = function(patient) {
     var element = document.createElement("div");
     element.classList.add("row");
-    element.innerHTML = patient.message;
+    element.innerHTML = patient.name;
     document.getElementById("outputLog").appendChild(element);
+};
+
+/**
+ * Creates a patient via the API.
+ * @param {string} name Name of the patient.
+ */
+clouddental.createPatient = function(name) {
+    gapi.client.patientsCRUD.patients.createPatient({'name': name}).execute(
+        function(resp) {
+            if (!resp.code) {
+                clouddental.print(resp);
+            } else {
+                window.alert(resp.message);
+            }
+        }
+    );
 };
 
 /**
