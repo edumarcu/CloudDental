@@ -6,6 +6,8 @@ import com.google.api.server.spi.response.NotFoundException;
 import com.google.appengine.api.users.User;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Named;
 
@@ -14,6 +16,7 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Parent;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.ObjectifyService;
 
 /**
  * Defines v1 of a patientsCRUD API.
@@ -28,7 +31,7 @@ import com.googlecode.objectify.Key;
 @Entity
 public class Patients {
     @Id public Long id;
-    public static ArrayList<Patient> patients = new ArrayList<>();
+ //   public static ArrayList<Patient> patients = new ArrayList<>();
 /*    public static ArrayList<PrintPatient> patients = new ArrayList<>();
 
     static {
@@ -40,19 +43,32 @@ public class Patients {
     public Patient createPatient(@Named("name") String name) {
         Patient p = new Patient(name);
 
-        patients.add(p);
+        ObjectifyService.ofy().save().entity(p).now();
+        //patients.add(p);
         return p;
     }
 
-    public Patient getPatient(@Named("id") Integer id) throws NotFoundException {
+/*    public Patient getPatient(@Named("id") Integer id) throws NotFoundException {
         try {
             return patients.get(id);
         } catch (IndexOutOfBoundsException e) {
             throw new NotFoundException("Patients not found with an index: " + id);
         }
+    }*/
+
+    public Patient getPatient(@Named("name") String name) {
+       // return ObjectifyService.ofy().load().type(Patient.class).id(5066549580791808L).now();
+        return ObjectifyService.ofy().load().type(Patient.class).filter("name", name).first().now();
+
     }
 
-    public ArrayList<Patient> listPatients() {
-        return patients;
+    public List<Patient> listPatients() {
+        return ObjectifyService.ofy()
+                .load()
+                .type(Patient.class)
+                //.ancestor(Objects)
+               // .order("-creationDate")
+               // .limit(5)
+                .list();
     }
 }
