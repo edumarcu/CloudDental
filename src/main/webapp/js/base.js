@@ -122,6 +122,21 @@ clouddental.updatePatient = function(name) {
     );
 };
 
+/**
+ * Deletes a patient via the API.
+ * @param {string} name of the patient.
+ */
+clouddental.deletePatient = function(name) {
+    gapi.client.patientsCRUD.patients.deletePatient({"name": name}).execute(
+        function(resp) {
+            if (!resp.code) {
+                clouddental.print("delete", resp);
+            } else {
+                window.alert(resp.message);
+            }
+        }
+    );
+};
 
 /**
  * Lists patients via the API.
@@ -158,6 +173,11 @@ clouddental.enableButtons = function() {
         clouddental.updatePatient(
             document.getElementById("nameUpdate").value);
     }
+
+        document.getElementById("deletePatient").onclick = function() {
+            clouddental.deletePatient(
+                document.getElementById("nameDelete").value);
+        }
 
     document.getElementById("listPatients").onclick = function() {
         clouddental.listPatients();

@@ -42,21 +42,28 @@ public class Patients {
         return ObjectifyService.ofy().load().type(Patient.class).filter("name", name).first().now();
     }
 
-    public List<Patient> listPatients() {
-        return ObjectifyService.ofy()
-                .load()
-                .type(Patient.class)
-                //.ancestor(Objects)
-               // .order("-creationDate")
-               // .limit(5)
-                .list();
-    }
-
     public Patient updatePatient(@Named("name") String name) {
         Patient p = getPatient(name);
         p.setUpdateDate(new Date());
 
         ObjectifyService.ofy().save().entity(p).now();
         return getPatient(name);
+    }
+
+    public Patient deletePatient(@Named("name") String name) {
+        Patient p = getPatient(name);
+
+        ObjectifyService.ofy().delete().entity(p).now();
+        return p;
+    }
+
+    public List<Patient> listPatients() {
+        return ObjectifyService.ofy()
+                .load()
+                .type(Patient.class)
+                        //.ancestor(Objects)
+                        // .order("-creationDate")
+                        // .limit(5)
+                .list();
     }
 }
