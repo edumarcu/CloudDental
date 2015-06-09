@@ -37,8 +37,11 @@ public class Patients {
         patients.add(new PrintPatient("Alber"));
     }*/
 
-    public void createPatient(@Named("name") String name) {
-        patients.add(new Patient(name));
+    public Patient createPatient(@Named("name") String name) {
+        Patient p = new Patient(name);
+
+        patients.add(p);
+        return p;
     }
 
     public Patient getPatient(@Named("id") Integer id) throws NotFoundException {

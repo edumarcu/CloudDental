@@ -67,10 +67,10 @@ clouddental.auth = function() {
  * Prints a greeting to the patient log.
  * param {Object} patient Patient to print.
  */
-clouddental.print = function(patient) {
+clouddental.print = function(functionType, patient) {
     var element = document.createElement("div");
     element.classList.add("row");
-    element.innerHTML = patient.name;
+    element.innerHTML = functionType + " " + patient.name;
     document.getElementById("outputLog").appendChild(element);
 };
 
@@ -79,10 +79,10 @@ clouddental.print = function(patient) {
  * @param {string} name Name of the patient.
  */
 clouddental.createPatient = function(name) {
-    gapi.client.patientsCRUD.patients.createPatient({'name': name}).execute(
+    gapi.client.patientsCRUD.patients.createPatient({"name": name}).execute(
         function(resp) {
             if (!resp.code) {
-                clouddental.print(resp);
+                clouddental.print("create", resp);
             } else {
                 window.alert(resp.message);
             }
@@ -95,10 +95,10 @@ clouddental.createPatient = function(name) {
  * @param {string} id ID of the patient.
  */
 clouddental.getPatient = function(id) {
-    gapi.client.patientsCRUD.patients.getPatient({'id': id}).execute(
+    gapi.client.patientsCRUD.patients.getPatient({"id": id}).execute(
         function(resp) {
             if (!resp.code) {
-                clouddental.print(resp);
+                clouddental.print("get", resp);
             } else {
                 window.alert(resp.message);
             }
@@ -115,7 +115,7 @@ clouddental.listPatients = function() {
             if (!resp.code) {
                 resp.items = resp.items || [];
                 for (var i = 0; i < resp.items.length; i++) {
-                    clouddental.print(resp.items[i]);
+                    clouddental.print("list " + i, resp.items[i]);
                 }
            }
         }
@@ -126,6 +126,12 @@ clouddental.listPatients = function() {
  * Enables the button callbacks in the UI.
  */
 clouddental.enableButtons = function() {
+
+    document.getElementById("createPatient").onclick = function() {
+        clouddental.createPatient(
+            document.getElementById("name").value);
+    }
+
     document.getElementById("getPatient").onclick = function() {
         clouddental.getPatient(
             document.getElementById("id").value);
