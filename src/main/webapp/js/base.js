@@ -70,7 +70,12 @@ clouddental.auth = function() {
 clouddental.print = function(functionType, patient) {
     var element = document.createElement("div");
     element.classList.add("row");
-    element.innerHTML = functionType + " " + patient.name + " " + patient.creationDate + " " + patient.id + " " + patient.updateDate;
+    if (patient == undefined) {
+        element.innerHTML = functionType;
+    }
+    else {
+        element.innerHTML = functionType + " " + patient.name + " " + patient.creationDate + " " + patient.id + " " + patient.updateDate;
+    }
     document.getElementById("outputLog").appendChild(element);
 };
 
@@ -146,8 +151,13 @@ clouddental.listPatients = function() {
         function(resp) {
             if (!resp.code) {
                 resp.items = resp.items || [];
-                for (var i = 0; i < resp.items.length; i++) {
-                    clouddental.print("list " + i, resp.items[i]);
+                if (resp.items.length == 0) {
+                     clouddental.print("list");
+                }
+                else {
+                    for (var i = 0; i < resp.items.length; i++) {
+                        clouddental.print("list " + i, resp.items[i]);
+                    }
                 }
            }
         }
